@@ -13,7 +13,7 @@ import (
 )
 
 /*
-	note: we cannot use parallel tests for this resource as only one instance of a google identity provider can be created
+	note: we cannot use parallel tests for this resource as only one instance of a Google identity provider can be created
 	for a realm.
 */
 

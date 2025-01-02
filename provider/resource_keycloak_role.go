@@ -248,7 +248,7 @@ func resourceKeycloakRoleUpdate(ctx context.Context, data *schema.ResourceData, 
 
 		// at this point we have two slices:
 		// `keycloakCompositesToRemove` should be removed from the role's list of composites
-		// `tfCompositeIds` should be added to the role's list of composites. all of the roles that exist on both sides have already been removed
+		// `tfCompositeIds` should be added to the role's list of composites. All the roles that exist on both sides have already been removed
 
 		if len(keycloakCompositesToRemove) != 0 {
 			err = keycloakClient.RemoveCompositesFromRole(ctx, role, keycloakCompositesToRemove)
