@@ -80,6 +80,27 @@ This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) for de
 
 After cloning the repository, you can build the project by running `make build`.
 
+### Debugging
+
+We support remote debugging via [delve](https://github.com/go-delve/delve) via the make target `build-debug` and `run-debug`.
+
+To debug the plugin, proceed as follows:
+1) Run `make build-debug`
+2) Run `make run-debug`
+3) Attach a remote debugger to the printed local address, e.g. `127.0.0.1:58772` from your IDE.
+4) Copy the `TF_REATTACH_PROVIDERS='{...}'` env variable, that is printed by the delve debugger after attachment.
+5) In a separate terminal prepend the `TF_REATTACH_PROVIDERS='{...}'` env variable to your `terraform ...` command
+
+Note that we use the delve options to wait for a debugger. This allows us to debug the complete
+plugin lifecycle.
+
+Note for Goland users, there is a preconfigured remote debugger configuration called `local debug`.
+
+### Debugging Example
+
+The easiest way to play with the remote debugger setup is the bundled example project.
+To use that run `make build-example-debug` and follow the steps above.
+
 ### Local Environment
 
 You can spin up a local developer environment via [Docker Compose](https://docs.docker.com/compose/) by running `make local`.
