@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/keycloak/terraform-provider-keycloak/keycloak"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"os"
@@ -433,7 +433,7 @@ func testAccCheckKeycloakUserInitialPasswordLogin(username, password, clientId s
 		defer response.Body.Close()
 
 		if response.StatusCode != http.StatusOK {
-			body, _ := ioutil.ReadAll(response.Body)
+			body, _ := io.ReadAll(response.Body)
 			return fmt.Errorf("user with username %s cannot login with password %s\n body: %s", username, password, string(body))
 		}
 
