@@ -9,11 +9,23 @@ VERSION=$$(git describe --tags)
 build:
 	CGO_ENABLED=0 go build -trimpath -ldflags "-s -w -X main.version=$(VERSION)" -o terraform-provider-keycloak_$(VERSION)
 
-build-example: build
+build-debug:
+	# keep debug info in the binary
+	CGO_ENABLED=0 go build -gcflags "all=-N -l" -trimpath -ldflags " -X main.version=$(VERSION)" -o terraform-provider-keycloak_$(VERSION)
+
+prepare-example:
 	mkdir -p example/.terraform/plugins/terraform.local/keycloak/keycloak/4.5.0/$(GOOS)_$(GOARCH)
 	mkdir -p example/terraform.d/plugins/terraform.local/keycloak/keycloak/4.5.0/$(GOOS)_$(GOARCH)
 	cp terraform-provider-keycloak_* example/.terraform/plugins/terraform.local/keycloak/keycloak/4.5.0/$(GOOS)_$(GOARCH)/
 	cp terraform-provider-keycloak_* example/terraform.d/plugins/terraform.local/keycloak/keycloak/4.5.0/$(GOOS)_$(GOARCH)/
+
+build-example: build prepare-example
+
+build-example-debug: build-debug prepare-example
+
+run-debug:
+	echo "Starting delve debugger listening on port 127.0.0.1:58772"
+	dlv exec --listen=:58772 --accept-multiclient --headless "./terraform-provider-keycloak_$(VERSION)" -- -debug
 
 local: deps user-federation-example
 	docker compose up --build -d
