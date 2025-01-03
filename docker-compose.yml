@@ -37,7 +37,7 @@ services:
 # Enable for remote java debugging
 #    - PREPEND_JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8787
     ports:
-    - 8080:8080
+    - "8080:8080"
 # Enable for remote java debugging
 #    - 8787:8787
     volumes:

@@ -1402,7 +1402,7 @@ func resourceKeycloakRealmRead(ctx context.Context, data *schema.ResourceData, m
 		return handleNotFoundError(ctx, err, data)
 	}
 
-	// we can't trust the API to set this field correctly since it just responds with "**********" this implies a 'password only' change will not detected
+	// we can't trust the API to set this field correctly since it just responds with "**********" this implies a 'password only' change will not be detected
 	if smtpPassword, ok := getRealmSMTPPasswordFromData(data); ok {
 		realm.SmtpServer.Password = smtpPassword
 	}
