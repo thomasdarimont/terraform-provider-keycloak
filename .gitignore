@@ -19,6 +19,9 @@ terraform.d/
 .terraform.lock.hcl
 terraform.tfstate*
 
+# local experiments or reproducers
+scratch/
+
 .gradle/
 
 # custom user federation example
