@@ -28,9 +28,18 @@ run-debug:
 	dlv exec --listen=:58772 --accept-multiclient --headless "./terraform-provider-keycloak_$(VERSION)" -- -debug
 
 local: deps user-federation-example
+	echo "Starting local Keycloak environment"
 	docker compose up --build -d
 	./scripts/wait-for-local-keycloak.sh
 	./scripts/create-terraform-client.sh
+
+local-stop:
+	echo "Stopping local Keycloak environment"
+	docker compose stop
+
+local-down:
+	echo "Destroying local Keycloak environment"
+	docker compose down
 
 deps:
 	./scripts/check-deps.sh

@@ -107,6 +107,8 @@ You can spin up a local developer environment via [Docker Compose](https://docs.
 This will spin up a few containers for Keycloak, PostgreSQL, and OpenLDAP, which can be used for testing the provider.
 This environment and its setup via `make local` is not intended for production use.
 
+To stop the environment you can use the `make local-stop`. To remove the local environment use `make local-down`.
+
 Note: The setup scripts require the [jq](https://stedolan.github.io/jq/) command line utility.
 
 ### Tests
