@@ -35,11 +35,12 @@ services:
     - QUARKUS_HTTP_ACCESS_LOG_ENABLED=true
     - QUARKUS_HTTP_RECORD_REQUEST_START_TIME=true
 # Enable for remote java debugging
-#    - PREPEND_JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8787
+#    - DEBUG=true
+#    - DEBUG_PORT=*:8787
     ports:
     - "8080:8080"
 # Enable for remote java debugging
-#    - 8787:8787
+#    - "8787:8787"
     volumes:
 # Make the custom-user-federation-example extension available to Keycloak. The :z option is required and tells Docker that the volume content will be shared between containers.
     - ./custom-user-federation-example/build/libs/custom-user-federation-example-all.jar:/opt/keycloak/providers/custom-user-federation-example-all.jar:z
