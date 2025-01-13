@@ -1,9 +1,6 @@
 # terraform-provider-keycloak
 Terraform provider for [Keycloak](https://www.keycloak.org/).
 
-> [!NOTE]
-> Please note that this is currently work-in-progress, please be patient while we are preparing for the first release in the new organization.
-
 ## Migration to the new provider
 
 To migrate from `mrparkers/keycloak` to the `keycloak/keycloak` Terraform provider, you can use the `terraform state replace-provider` command:
