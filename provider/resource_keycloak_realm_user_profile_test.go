@@ -106,6 +106,7 @@ func TestAccKeycloakRealmUserProfile_basicFull(t *testing.T) {
 			{
 				Name:        "attribute2",
 				DisplayName: "attribute 2",
+				MultiValued: false,
 				Group:       "group",
 				Selector:    &keycloak.RealmUserProfileSelector{Scopes: []string{"roles"}},
 				Required: &keycloak.RealmUserProfileRequired{
