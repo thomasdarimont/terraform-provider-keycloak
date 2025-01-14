@@ -28,6 +28,7 @@ resource "keycloak_realm_user_profile" "userprofile" {
     display_name = "Field 1"
     group        = "group1"
 
+    multi_valued = false
     enabled_when_scope = ["offline_access"]
 
     required_for_roles  = ["user"]
@@ -98,6 +99,7 @@ resource "keycloak_realm_user_profile" "userprofile" {
 
 - `name` - (Required) The name of the attribute.
 - `display_name` - (Optional) The display name of the attribute.
+- `multi_valued` - (Optional) If the attribute supports multiple values. Defaults to `false`.
 - `group` - (Optional) The group that the attribute belong to.
 - `enabled_when_scope` - (Optional) A list of scopes. The attribute will only be enabled when these scopes are requested by clients.
 - `required_for_roles` - (Optional) A list of roles for which the attribute will be required.
