@@ -655,3 +655,8 @@ func newSignedJWT(ctx context.Context, url, clientId, alg, jwtSigningKey string)
 
 	return tokenString, nil
 }
+
+// Expose the underlying http client for tests
+func (kc *KeycloakClient) GetHttpClient() *http.Client {
+	return kc.httpClient
+}
