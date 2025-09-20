@@ -87,13 +87,13 @@ func TestAccKeycloakClientConnectHttpsMtlsAuth(t *testing.T) {
 
 	// skip test if running 26.0 or lower
 	if v, _ := keycloakClient.VersionIsLessThanOrEqualTo(ctx, Version_26); v {
-		t.Skip()
+		t.Skip("We only test Keycloak > 26.0")
 	}
 
 	keycloakUrl := os.Getenv("KEYCLOAK_URL")
 	if !strings.HasPrefix(keycloakUrl, "https://") {
 		// only run tests for https URL
-		t.Skip()
+		t.Skip("We only test mtls when Keycloak is used with an https:// url")
 	}
 
 	// then try again to connect with Keycloak but this time via https with mtls client auth
