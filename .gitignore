@@ -26,6 +26,7 @@ scratch/
 .gradle/
 
 # custom user federation example
+custom-user-federation-example/bin
 custom-user-federation-example/build
 !custom-user-federation-example/build/libs
 
@@ -38,3 +39,4 @@ site/
 .DS_Store
 
 test_env.json
+test_env_*.json
