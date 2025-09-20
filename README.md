@@ -135,6 +135,7 @@ KEYCLOAK_CLIENT_SECRET=884e0f95-0f42-4a63-9b1f-94274655669e \
 KEYCLOAK_CLIENT_TIMEOUT=5 \
 KEYCLOAK_REALM=master \
 KEYCLOAK_TEST_PASSWORD_GRANT=true \
+KEYCLOAK_URL_HTTP="http://localhost:8080" \
 KEYCLOAK_URL="https://localhost:8443" \
 KEYCLOAK_TLS_CLIENT_CERT="$(cat testdata/tls/client-cert.pem)" \
 KEYCLOAK_TLS_CLIENT_KEY="$(cat testdata/tls/client-key.pem)" \
