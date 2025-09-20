@@ -70,14 +70,30 @@ func TestAccKeycloakClientConnectHttpsMtlsAuth(t *testing.T) {
 
 	clientTimeout := checkClientTimeout(t)
 
-	keycloakClient, err := NewKeycloakClient(ctx, os.Getenv("KEYCLOAK_URL_HTTPS"), "", os.Getenv("KEYCLOAK_ADMIN_URL"), os.Getenv("KEYCLOAK_CLIENT_ID"), os.Getenv("KEYCLOAK_CLIENT_SECRET"), os.Getenv("KEYCLOAK_REALM"), os.Getenv("KEYCLOAK_USER"), os.Getenv("KEYCLOAK_PASSWORD"), "", "", true, clientTimeout, os.Getenv("KEYCLOAK_TLS_CA_CERT"), true, os.Getenv("KEYCLOAK_TLS_CLIENT_CERT"), os.Getenv("KEYCLOAK_TLS_CLIENT_KEY"), "", false, map[string]string{
+	// use the keycloak client with plain http to read Keycloak version
+	keycloakClient, err := NewKeycloakClient(ctx, os.Getenv("KEYCLOAK_URL"), "", os.Getenv("KEYCLOAK_ADMIN_URL"), os.Getenv("KEYCLOAK_CLIENT_ID"), os.Getenv("KEYCLOAK_CLIENT_SECRET"), os.Getenv("KEYCLOAK_REALM"), os.Getenv("KEYCLOAK_USER"), os.Getenv("KEYCLOAK_PASSWORD"), "", "", true, clientTimeout, "", true, "", "", "", false, map[string]string{
+		"foo": "bar",
+	})
+
+	version, err := keycloakClient.Version(ctx)
+	if err != nil {
+		t.Fatalf("%s", err)
+	}
+
+	// skip test if running 26.0 or lower
+	if v, _ := keycloakClient.VersionIsLessThanOrEqualTo(ctx, Version_26); v {
+		t.Skip()
+	}
+
+	// then try again to connect with Keycloak but this time via https with mtls client auth
+	mtlsKeycloakClient, err := NewKeycloakClient(ctx, os.Getenv("KEYCLOAK_URL_HTTPS"), "", os.Getenv("KEYCLOAK_ADMIN_URL"), os.Getenv("KEYCLOAK_CLIENT_ID"), os.Getenv("KEYCLOAK_CLIENT_SECRET"), os.Getenv("KEYCLOAK_REALM"), os.Getenv("KEYCLOAK_USER"), os.Getenv("KEYCLOAK_PASSWORD"), "", "", true, clientTimeout, os.Getenv("KEYCLOAK_TLS_CA_CERT"), true, os.Getenv("KEYCLOAK_TLS_CLIENT_CERT"), os.Getenv("KEYCLOAK_TLS_CLIENT_KEY"), "", false, map[string]string{
 		"foo": "bar",
 	})
 	if err != nil {
 		t.Fatalf("%s", err)
 	}
 
-	version, err := keycloakClient.Version(ctx)
+	version, err = mtlsKeycloakClient.Version(ctx)
 	if err != nil {
 		t.Fatalf("%s", err)
 	}
