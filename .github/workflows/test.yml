@@ -101,6 +101,7 @@ jobs:
 
           docker run -d --name keycloak \
           -p 8080:8080 \
+          -p 8443:8443 \
           -e KC_DB=dev-mem \
           -e KC_LOG_LEVEL=INFO,org.keycloak:debug \
           -e KEYCLOAK_ADMIN=keycloak \
