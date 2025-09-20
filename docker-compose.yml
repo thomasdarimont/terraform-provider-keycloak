@@ -34,12 +34,13 @@ services:
     - QUARKUS_HTTP_ACCESS_LOG_ENABLED=true
     - QUARKUS_HTTP_RECORD_REQUEST_START_TIME=true
     - KC_HTTPS_CLIENT_AUTH=required
-    - KC_HTTPS_CERTIFICATE_FILE=/opt/keycloak/misc/tls-server-cert.pem
-    - KC_HTTPS_CERTIFICATE_KEY_FILE=/opt/keycloak/misc/tls-server-key.pem
-    - KC_TRUSTSTORE_PATHS=/opt/keycloak/misc/tls-client-cert.pem
+    - KC_HTTPS_CERTIFICATE_FILE=/opt/keycloak/testdata/tls/server-cert.pem
+    - KC_HTTPS_CERTIFICATE_KEY_FILE=/opt/keycloak/testdata/tls/server-key.pem
+    - KC_TRUSTSTORE_PATHS=/opt/keycloak/testdata/tls/ca-cert.pem,/opt/keycloak/testdata/tls/client-cert.pem
 # Enable for remote java debugging
 #    - DEBUG=true
 #    - DEBUG_PORT=*:8787
+#    - DEBUG_SUSPEND=y
     ports:
     - "8080:8080"
     - "8443:8443"
@@ -49,3 +50,4 @@ services:
 # Make the custom-user-federation-example extension available to Keycloak. The :z option is required and tells Docker that the volume content will be shared between containers.
     - ./custom-user-federation-example/build/libs/custom-user-federation-example-all.jar:/opt/keycloak/providers/custom-user-federation-example-all.jar:z
     - ./provider/misc:/opt/keycloak/misc:z
+    - ./testdata:/opt/keycloak/testdata:z

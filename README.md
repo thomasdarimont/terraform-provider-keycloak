@@ -136,9 +136,9 @@ KEYCLOAK_CLIENT_TIMEOUT=5 \
 KEYCLOAK_REALM=master \
 KEYCLOAK_TEST_PASSWORD_GRANT=true \
 KEYCLOAK_URL="https://localhost:8443" \
-KEYCLOAK_TLS_CLIENT_CERT="provider/misc/tls-client-cert.pem" \
-KEYCLOAK_TLS_CLIENT_KEY="provider/misc/tls-client-key.pem" \
-KEYCLOAK_TLS_CA_CERT="provider/misc/tls-server-cert.pem" \
+KEYCLOAK_TLS_CLIENT_CERT="$(cat testdata/tls/client-cert.pem)" \
+KEYCLOAK_TLS_CLIENT_KEY="$(cat testdata/tls/client-key.pem)" \
+KEYCLOAK_TLS_CA_CERT="$(cat testdata/tls/server-cert.pem)" \
 make testacc
 ```
 
