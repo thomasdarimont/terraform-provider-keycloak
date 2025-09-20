@@ -1,6 +1,9 @@
+.PHONY: mtls-certs clean-mtls-certs
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 GOOS?=darwin
 GOARCH?=arm64
+
+CERTS_TLS_DIR ?= testdata/tls
 
 MAKEFLAGS += --silent
 
@@ -62,3 +65,55 @@ vet:
 
 user-federation-example:
 	cd custom-user-federation-example && ./gradlew shadowJar
+
+mtls-certs:
+	mkdir -p "$(CERTS_TLS_DIR)" && \
+	echo ">>> Generating CA key and certificate" && \
+	openssl genrsa -out "$(CERTS_TLS_DIR)/ca-key.pem" 4096 && \
+	openssl req -x509 -new -key "$(CERTS_TLS_DIR)/ca-key.pem" -sha256 -days 3650 \
+	  -subj "/C=US/ST=Unknown/L=Unknown/O=Unknown/OU=Unknown/CN=Dev Test Root" \
+	  -out "$(CERTS_TLS_DIR)/ca-cert.pem" && \
+	\
+	echo ">>> Generating server key and certificate" && \
+	openssl genrsa -out "$(CERTS_TLS_DIR)/server-key.pem" 2048 && \
+	openssl req -new -key "$(CERTS_TLS_DIR)/server-key.pem" -subj "/C=US/ST=Unknown/L=Unknown/O=Unknown/OU=Unknown/CN=localhost" \
+	  -out "$(CERTS_TLS_DIR)/server.csr" && \
+	printf "basicConstraints=CA:false\nkeyUsage=critical,digitalSignature,keyEncipherment\nextendedKeyUsage=serverAuth\nsubjectAltName=DNS:localhost,IP:127.0.0.1\n" > "$(CERTS_TLS_DIR)/server.ext" && \
+	openssl x509 -req -in "$(CERTS_TLS_DIR)/server.csr" \
+	  -CA "$(CERTS_TLS_DIR)/ca-cert.pem" -CAkey "$(CERTS_TLS_DIR)/ca-key.pem" -CAserial "$(CERTS_TLS_DIR)/ca-cert.srl" -CAcreateserial \
+	  -out "$(CERTS_TLS_DIR)/server-cert.pem" -days 825 -sha256 -extfile "$(CERTS_TLS_DIR)/server.ext" && \
+	\
+	echo ">>> Generating trusted client key and certificate" && \
+	openssl genrsa -out "$(CERTS_TLS_DIR)/client-key.pem" 2048 && \
+	openssl req -new -key "$(CERTS_TLS_DIR)/client-key.pem" -subj "/C=US/ST=Unknown/L=Unknown/O=Unknown/OU=Unknown/CN=trusted-client-mtls" \
+	  -out "$(CERTS_TLS_DIR)/client.csr" && \
+	printf "basicConstraints=CA:false\nkeyUsage=critical,digitalSignature\nextendedKeyUsage=clientAuth\nsubjectAltName=DNS:trusted-client-mtls\n" > "$(CERTS_TLS_DIR)/client.ext" && \
+	openssl x509 -req -in "$(CERTS_TLS_DIR)/client.csr" \
+	  -CA "$(CERTS_TLS_DIR)/ca-cert.pem" -CAkey "$(CERTS_TLS_DIR)/ca-key.pem" -CAserial "$(CERTS_TLS_DIR)/ca-cert.srl" \
+	  -out "$(CERTS_TLS_DIR)/client-cert.pem" -days 825 -sha256 -extfile "$(CERTS_TLS_DIR)/client.ext" && \
+	\
+	echo ">>> Generating untrusted client key and certificate" && \
+    	openssl genrsa -out "$(CERTS_TLS_DIR)/untrusted-client-key.pem" 2048 && \
+    	openssl req -new -key "$(CERTS_TLS_DIR)/untrusted-client-key.pem" -subj "/CN=untrusted-client-mtls" \
+    	  -out "$(CERTS_TLS_DIR)/untrusted-client.csr" && \
+    	printf "basicConstraints=CA:false\nkeyUsage=critical,digitalSignature\nextendedKeyUsage=clientAuth\nsubjectAltName=DNS:untrusted-client-mtls" > "$(CERTS_TLS_DIR)/untrusted-client.ext" && \
+    	openssl x509 -req -in "$(CERTS_TLS_DIR)/untrusted-client.csr" -key "$(CERTS_TLS_DIR)/untrusted-client-key.pem"\
+    	  -out "$(CERTS_TLS_DIR)/untrusted-client-cert.pem" -days 825 -sha256 -extfile "$(CERTS_TLS_DIR)/untrusted-client.ext" && \
+    	\
+	echo ">>> Cleaning up temporary files" && \
+	rm -f "$(CERTS_TLS_DIR)/server.csr" "$(CERTS_TLS_DIR)/client.csr" "$(CERTS_TLS_DIR)/untrusted-client.csr" \
+	      "$(CERTS_TLS_DIR)/server.ext" "$(CERTS_TLS_DIR)/client.ext" "$(CERTS_TLS_DIR)/untrusted-client.ext"\
+	      "$(CERTS_TLS_DIR)/ca-cert.srl" && \
+	echo ">>> Done. Certificates are in $(CERTS_TLS_DIR)"
+
+clean-mtls-certs:
+	echo ">>> Removing generated certs and keys in $(CERTS_TLS_DIR)" && \
+	rm -f \
+	  "$(CERTS_TLS_DIR)/ca-key.pem"     "$(CERTS_TLS_DIR)/ca-cert.pem" \
+	  "$(CERTS_TLS_DIR)/server-key.pem" "$(CERTS_TLS_DIR)/server-cert.pem" \
+	  "$(CERTS_TLS_DIR)/client-key.pem" "$(CERTS_TLS_DIR)/client-cert.pem" \
+	  "$(CERTS_TLS_DIR)/untrusted-client-key.pem" "$(CERTS_TLS_DIR)/untrusted-client-cert.pem" \
+	  "$(CERTS_TLS_DIR)/server.csr"     "$(CERTS_TLS_DIR)/client.csr" "$(CERTS_TLS_DIR)/untrusted-client.csr" \
+	  "$(CERTS_TLS_DIR)/server.ext"     "$(CERTS_TLS_DIR)/client.ext"  "$(CERTS_TLS_DIR)/untrusted-client.ext" \
+	  "$(CERTS_TLS_DIR)/ca-cert.srl" && \
+	echo ">>> Done."
