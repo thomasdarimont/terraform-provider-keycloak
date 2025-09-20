@@ -94,6 +94,8 @@ jobs:
           fi
           if [[ "${{ matrix.keycloak-version }}" == "26.3.4" || "${{ matrix.keycloak-version }}" == "26.2.5" ]]; then
             EXTRA_FEATURES=",admin-fine-grained-authz:v1"
+
+            EXTRA_HTTP_CLIENT_AUTH="-e KC_HTTPS_CLIENT_AUTH=required"
             EXTRA_HTTPS_CERT="-e KC_HTTPS_CERTIFICATE_FILE=/opt/keycloak/testdata/tls/server-cert.pem"
             EXTRA_HTTPS_KEY="-e KC_HTTPS_CERTIFICATE_KEY_FILE=/opt/keycloak/testdata/tls/server-key.pem"
             EXTRA_MTLS_CERTS="-e KC_TRUSTSTORE_PATHS=/opt/keycloak/testdata/tls/ca-cert.pem,/opt/keycloak/testdata/tls/client-cert.pem"
@@ -108,7 +110,7 @@ jobs:
           -e KEYCLOAK_ADMIN_PASSWORD=password \
           -e KC_BOOTSTRAP_ADMIN_USERNAME=keycloak \
           -e KC_BOOTSTRAP_ADMIN_PASSWORD=password \
-          -e KC_HTTPS_CLIENT_AUTH=required \
+          ${EXTRA_HTTP_CLIENT_AUTH} \
           ${EXTRA_HTTPS_CERT} \
           ${EXTRA_HTTPS_KEY} \
           ${EXTRA_MTLS_CERTS} \
