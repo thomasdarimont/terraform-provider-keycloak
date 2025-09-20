@@ -45,7 +45,32 @@ func TestAccKeycloakClientConnect(t *testing.T) {
 
 	clientTimeout := checkClientTimeout(t)
 
-	keycloakClient, err := NewKeycloakClient(ctx, os.Getenv("KEYCLOAK_URL"), "", os.Getenv("KEYCLOAK_ADMIN_URL"), os.Getenv("KEYCLOAK_CLIENT_ID"), os.Getenv("KEYCLOAK_CLIENT_SECRET"), os.Getenv("KEYCLOAK_REALM"), os.Getenv("KEYCLOAK_USER"), os.Getenv("KEYCLOAK_PASSWORD"), "", "", true, clientTimeout, os.Getenv("KEYCLOAK_TLS_CA_CERT"), true, os.Getenv("KEYCLOAK_TLS_CLIENT_CERT"), os.Getenv("KEYCLOAK_TLS_CLIENT_KEY"), "", false, map[string]string{
+	keycloakClient, err := NewKeycloakClient(ctx, os.Getenv("KEYCLOAK_URL"), "", os.Getenv("KEYCLOAK_ADMIN_URL"), os.Getenv("KEYCLOAK_CLIENT_ID"), os.Getenv("KEYCLOAK_CLIENT_SECRET"), os.Getenv("KEYCLOAK_REALM"), os.Getenv("KEYCLOAK_USER"), os.Getenv("KEYCLOAK_PASSWORD"), "", "", true, clientTimeout, "", true, "", "", "", false, map[string]string{
+		"foo": "bar",
+	})
+	if err != nil {
+		t.Fatalf("%s", err)
+	}
+
+	version, err := keycloakClient.Version(ctx)
+	if err != nil {
+		t.Fatalf("%s", err)
+	}
+
+	if version == nil {
+		t.Fatalf("%s", "Server Version not found")
+	}
+}
+
+func TestAccKeycloakClientConnectHttpsMtlsAuth(t *testing.T) {
+
+	ctx := context.Background()
+
+	checkRequiredEnvironmentVariables(t)
+
+	clientTimeout := checkClientTimeout(t)
+
+	keycloakClient, err := NewKeycloakClient(ctx, os.Getenv("KEYCLOAK_URL_HTTPS"), "", os.Getenv("KEYCLOAK_ADMIN_URL"), os.Getenv("KEYCLOAK_CLIENT_ID"), os.Getenv("KEYCLOAK_CLIENT_SECRET"), os.Getenv("KEYCLOAK_REALM"), os.Getenv("KEYCLOAK_USER"), os.Getenv("KEYCLOAK_PASSWORD"), "", "", true, clientTimeout, os.Getenv("KEYCLOAK_TLS_CA_CERT"), true, os.Getenv("KEYCLOAK_TLS_CLIENT_CERT"), os.Getenv("KEYCLOAK_TLS_CLIENT_KEY"), "", false, map[string]string{
 		"foo": "bar",
 	})
 	if err != nil {
