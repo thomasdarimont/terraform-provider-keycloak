@@ -33,10 +33,8 @@ services:
     - KC_FEATURES=preview,admin-fine-grained-authz:v1
     - QUARKUS_HTTP_ACCESS_LOG_ENABLED=true
     - QUARKUS_HTTP_RECORD_REQUEST_START_TIME=true
-    - KC_HTTPS_CLIENT_AUTH=required
     - KC_HTTPS_CERTIFICATE_FILE=/opt/keycloak/testdata/tls/server-cert.pem
     - KC_HTTPS_CERTIFICATE_KEY_FILE=/opt/keycloak/testdata/tls/server-key.pem
-    - KC_TRUSTSTORE_PATHS=/opt/keycloak/testdata/tls/ca-cert.pem,/opt/keycloak/testdata/tls/client-cert.pem
 # Enable for remote java debugging
 #    - DEBUG=true
 #    - DEBUG_PORT=*:8787

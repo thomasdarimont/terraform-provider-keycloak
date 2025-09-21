@@ -71,6 +71,10 @@ func TestAccKeycloakClientConnectHttpsMtlsAuth(t *testing.T) {
 
 	clientTimeout := checkClientTimeout(t)
 
+	if os.Getenv("KEYCLOAK_TLS_CLIENT_CERT") == "" || os.Getenv("KEYCLOAK_TLS_CLIENT_KEY") == "" {
+		t.Skip("Skipping: KEYCLOAK_TLS_CLIENT_CERT and KEYCLOAK_TLS_CLIENT_KEY must both be set to test mTLS")
+	}
+
 	// use the keycloak client with plain http to read Keycloak version
 	keycloakHttpUrl := os.Getenv("KEYCLOAK_URL_HTTP")
 	if keycloakHttpUrl == "" {

@@ -106,6 +106,8 @@ You can spin up a local developer environment via [Docker Compose](https://docs.
 This will spin up a few containers for Keycloak, PostgreSQL, and OpenLDAP, which can be used for testing the provider.
 This environment and its setup via `make local` is not intended for production use.
 
+You can also use `make local-mtls` to start Keycloak with required client authentication via mTLS certificate.
+
 To stop the environment you can use the `make local-stop`. To remove the local environment use `make local-down`.
 
 Note: The setup scripts require the [jq](https://stedolan.github.io/jq/) command line utility.
@@ -128,7 +130,25 @@ KEYCLOAK_URL="http://localhost:8080" \
 make testacc
 ```
 
-You can also run the same tests on Keycloak's https port with the Keycloak terraform provider authenticating to the server with a client TLS certificate:
+#### Test with HTTPS
+You can also run the same tests on Keycloak's https port.
+For this start the env with `make local`. After that run the following command:
+
+```
+KEYCLOAK_CLIENT_ID=terraform \
+KEYCLOAK_CLIENT_SECRET=884e0f95-0f42-4a63-9b1f-94274655669e \
+KEYCLOAK_CLIENT_TIMEOUT=5 \
+KEYCLOAK_REALM=master \
+KEYCLOAK_TEST_PASSWORD_GRANT=true \
+KEYCLOAK_URL="https://localhost:8443" \
+KEYCLOAK_TLS_CA_CERT="$(cat testdata/tls/server-cert.pem)" \
+make testacc
+```
+
+#### Test with HTTPS + mTLS
+You can also run the same tests on Keycloak's https port with the Keycloak terraform provider authenticating to the server with a mTLS client certificate.
+For this start the env with `make local-mtls`. After that run the following command:
+
 ```
 KEYCLOAK_CLIENT_ID=terraform \
 KEYCLOAK_CLIENT_SECRET=884e0f95-0f42-4a63-9b1f-94274655669e \

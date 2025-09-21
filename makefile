@@ -36,6 +36,12 @@ local: deps user-federation-example
 	./scripts/wait-for-local-keycloak.sh
 	./scripts/create-terraform-client.sh
 
+local-mtls: deps user-federation-example
+	echo "Starting local Keycloak environment with mtls"
+	docker compose --file docker-compose.yml --file docker-compose-mtls.yml up --build -d
+	./scripts/wait-for-local-keycloak.sh
+	./scripts/create-terraform-client.sh
+
 local-stop:
 	echo "Stopping local Keycloak environment"
 	docker compose stop
