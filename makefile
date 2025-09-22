@@ -3,7 +3,7 @@ GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 GOOS?=darwin
 GOARCH?=arm64
 
-CERTS_TLS_DIR ?= testdata/tls
+CERTS_TLS_DIR ?= provider/testdata/tls
 
 MAKEFLAGS += --silent
 
