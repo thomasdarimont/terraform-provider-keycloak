@@ -36,6 +36,9 @@ site/
 # releases
 *.zip
 
+# Keycloak access token
+keycloak_access_token
+
 .DS_Store
 
 # Custom test_env overrides
