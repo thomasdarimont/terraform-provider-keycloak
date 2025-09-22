@@ -146,7 +146,7 @@ make testacc
 ```
 
 #### Test with HTTPS + mTLS
-You can also run the same tests on Keycloak's https port with the Keycloak terraform provider authenticating to the server with a mTLS client certificate.
+You can also run the same tests on Keycloak's https port with the Keycloak Terraform provider authenticating to the server with a mTLS client certificate.
 For this start the env with `make local-mtls`. After that run the following command:
 
 ```
