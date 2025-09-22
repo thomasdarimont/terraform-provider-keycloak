@@ -117,7 +117,7 @@ jobs:
           -e KC_FEATURES=preview${EXTRA_FEATURES} \
           -e QUARKUS_HTTP_ACCESS_LOG_ENABLED=true \
           -e QUARKUS_HTTP_RECORD_REQUEST_START_TIME=true \
-          -v $PWD/provider/misc:/opt/keycloak/misc:z \
+          -v $PWD/testdata/misc:/opt/keycloak/misc:z \
           -v $PWD/testdata:/opt/keycloak/testdata:z \
           $MOUNT_FEDERATION_EXAMPLE_VOLUME \
           quay.io/keycloak/keycloak:${{ matrix.keycloak-version }} --verbose start-dev
