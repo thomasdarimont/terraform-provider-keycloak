@@ -38,5 +38,14 @@ site/
 
 .DS_Store
 
-test_env.json
-test_env_*.json
+# Custom test_env overrides
+test_env*.json
+
+# Custom provider_installation mappings
+dev.tfrc
+
+# KCADM config folder
+.keycloak/
+
+# Locally started Keycloak data
+kcdata/
