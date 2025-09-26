@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/keycloak/terraform-provider-keycloak/helper"
 	"github.com/keycloak/terraform-provider-keycloak/keycloak/types"
 )
 
@@ -42,7 +43,7 @@ type OpenidClient struct {
 	Description                        string                                   `json:"description"`
 	PublicClient                       bool                                     `json:"publicClient"`
 	BearerOnly                         bool                                     `json:"bearerOnly"`
-	StandardFlowEnabled                bool                                     `json:"standardFlowEnabled"`
+	StandardFlowEnabled                *bool                                    `json:"standardFlowEnabled,omitempty"`
 	ImplicitFlowEnabled                bool                                     `json:"implicitFlowEnabled"`
 	DirectAccessGrantsEnabled          bool                                     `json:"directAccessGrantsEnabled"`
 	ServiceAccountsEnabled             bool                                     `json:"serviceAccountsEnabled"`
@@ -107,11 +108,11 @@ func (keycloakClient *KeycloakClient) GetOpenidClientServiceAccountUserId(ctx co
 }
 
 func (keycloakClient *KeycloakClient) ValidateOpenidClient(ctx context.Context, client *OpenidClient) error {
-	if client.BearerOnly && (client.StandardFlowEnabled || client.ImplicitFlowEnabled || client.DirectAccessGrantsEnabled || client.ServiceAccountsEnabled) {
+	if client.BearerOnly && (helper.BoolVal(client.StandardFlowEnabled) || client.ImplicitFlowEnabled || client.DirectAccessGrantsEnabled || client.ServiceAccountsEnabled) {
 		return fmt.Errorf("validation error: Keycloak cannot issue tokens for bearer-only clients; no oauth2 flows can be enabled for this client")
 	}
 
-	if (client.StandardFlowEnabled || client.ImplicitFlowEnabled) && len(client.ValidRedirectUris) == 0 {
+	if (helper.BoolVal(client.StandardFlowEnabled) || client.ImplicitFlowEnabled) && len(client.ValidRedirectUris) == 0 {
 		return fmt.Errorf("validation error: standard (authorization code) and implicit flows require at least one valid redirect uri")
 	}
 

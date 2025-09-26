@@ -60,3 +60,8 @@ func UpdateEnvFromTestEnvIfPresent() {
 		}
 	}
 }
+
+// BoolVal interprets a false/nil *bool as false, true otherwise
+func BoolVal(b *bool) bool {
+	return b != nil && *b
+}

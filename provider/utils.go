@@ -3,10 +3,11 @@ package provider
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/keycloak/terraform-provider-keycloak/keycloak"
@@ -152,4 +153,14 @@ func requiredWithoutAll(key cty.Path, checkExists []cty.Path) schema.ValidateRaw
 			})
 		}
 	}
+}
+
+// booleanOrNil returns a *bool pointer to true/false if the given key exists or nil
+func booleanOrNil(d *schema.ResourceData, key string) *bool {
+	v, exits := d.GetOk(key)
+	if !exits {
+		return nil
+	}
+	b := v.(bool)
+	return &b
 }

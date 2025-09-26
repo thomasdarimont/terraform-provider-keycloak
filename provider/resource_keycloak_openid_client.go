@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/go-cty/cty"
+	"github.com/keycloak/terraform-provider-keycloak/helper"
 
 	"dario.cat/mergo"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -403,7 +404,7 @@ func getOpenidClientFromData(data *schema.ResourceData) (*keycloak.OpenidClient,
 		Description:               data.Get("description").(string),
 		ClientSecret:              data.Get("client_secret").(string),
 		ClientAuthenticatorType:   data.Get("client_authenticator_type").(string),
-		StandardFlowEnabled:       data.Get("standard_flow_enabled").(bool),
+		StandardFlowEnabled:       booleanOrNil(data, "standard_flow_enabled"),
 		ImplicitFlowEnabled:       data.Get("implicit_flow_enabled").(bool),
 		DirectAccessGrantsEnabled: data.Get("direct_access_grants_enabled").(bool),
 		ServiceAccountsEnabled:    data.Get("service_accounts_enabled").(bool),
@@ -456,13 +457,13 @@ func getOpenidClientFromData(data *schema.ResourceData) (*keycloak.OpenidClient,
 		openidClient.RootUrl = &rootUrlString
 	}
 
-	if !openidClient.ImplicitFlowEnabled && !openidClient.StandardFlowEnabled {
+	if !openidClient.ImplicitFlowEnabled && (openidClient.StandardFlowEnabled != nil && !helper.BoolVal(openidClient.StandardFlowEnabled)) {
 		if _, ok := data.GetOk("valid_redirect_uris"); ok {
 			return nil, errors.New("valid_redirect_uris cannot be set when standard or implicit flow is not enabled")
 		}
 	}
 
-	if !openidClient.ImplicitFlowEnabled && !openidClient.StandardFlowEnabled && !openidClient.DirectAccessGrantsEnabled {
+	if !openidClient.ImplicitFlowEnabled && !helper.BoolVal(openidClient.StandardFlowEnabled) && !openidClient.DirectAccessGrantsEnabled {
 		if _, ok := data.GetOk("web_origins"); ok {
 			return nil, errors.New("web_origins cannot be set when standard or implicit flow is not enabled")
 		}

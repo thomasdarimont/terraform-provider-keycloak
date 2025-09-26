@@ -48,7 +48,7 @@ local-stop:
 
 local-down:
 	echo "Destroying local Keycloak environment"
-	docker compose down
+	docker compose down --volumes
 
 deps:
 	./scripts/check-deps.sh
